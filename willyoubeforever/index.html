@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Background Video with Audio</title>
+    <title>Love You</title>
     <style>
       body {
         margin: 0;
@@ -13,7 +13,8 @@
         align-items: center;
         height: 100vh;
         overflow: hidden;
-        background-color: black; /* Fallback color */
+        background-color: black;
+        font-family: Arial, sans-serif;
       }
 
       video {
@@ -24,7 +25,7 @@
         width: 100vw;
         height: auto;
         z-index: -1;
-        display: none; /* Hide video initially */
+        display: none;
       }
 
       .popup {
@@ -32,43 +33,101 @@
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        padding: 20px;
-        border-radius: 10px;
+        padding: 30px;
+        border-radius: 15px;
         text-align: center;
         z-index: 2;
-        display: none; /* Hide popup initially */
+        background: linear-gradient(145deg, #6a4c9c, #3b2a6b);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        color: white;
+        display: none;
       }
 
       .popup button {
+        background-color: #7a53e7;
+        color: white;
         margin: 10px;
-        padding: 10px 20px;
-        font-size: 16px;
+        padding: 12px 25px;
+        font-size: 18px;
+        border: none;
+        border-radius: 5px;
         cursor: pointer;
+        transition: background-color 0.3s;
+      }
+
+      .popup button:hover {
+        background-color: #6c4bb2;
       }
 
       .comment-form textarea {
         width: 80%;
-        padding: 10px;
-        margin: 10px 0;
-        border-radius: 5px;
-        border: 1px solid #ccc;
+        padding: 12px;
+        margin: 15px 0;
+        border-radius: 8px;
+        border: 2px solid #5a3382;
+        background-color: #2e1a47;
+        color: white;
+        font-size: 16px;
+      }
+
+      .comment-form textarea:focus {
+        outline: none;
+        border-color: #7a53e7;
       }
 
       .password-form input {
-        padding: 10px;
+        padding: 12px;
         font-size: 16px;
+        border-radius: 8px;
+        border: 2px solid #5a3382;
+        background-color: #2e1a47;
+        color: white;
+      }
+
+      .password-form input:focus {
+        outline: none;
+        border-color: #7a53e7;
+      }
+
+      .password-form button {
+        background-color: #7a53e7;
+        color: white;
+        margin-top: 10px;
+        padding: 12px 25px;
+        font-size: 16px;
+        border: none;
         border-radius: 5px;
-        border: 1px solid #ccc;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+
+      .password-form button:hover {
+        background-color: #6c4bb2;
+      }
+
+      /* For Thank You Popup */
+      #thank-you-popup {
+        background-color: #2e1a47;
+        color: white;
+      }
+
+      #thank-you-popup button {
+        background-color: #7a53e7;
+        color: white;
+      }
+
+      #thank-you-popup button:hover {
+        background-color: #6c4bb2;
       }
     </style>
   </head>
   <body>
     <!-- Password popup -->
     <div class="popup" id="password-popup">
-      <p>Please enter the password to continue:</p>
+      <p>Masukkan Password</p>
       <div class="password-form">
-        <input type="password" id="password" placeholder="Enter password" />
-        <button onclick="checkPassword()">Submit</button>
+        <input type="text" id="password" placeholder="Enter password" autocomplete="off" />
+        <button onclick="checkPassword()">Ok</button>
       </div>
     </div>
 
@@ -83,17 +142,17 @@
     </div>
 
     <!-- New popup for comment form -->
-    <div class="popup" id="comment-popup" style="background-color: white; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2)">
+    <div class="popup" id="comment-popup">
       <p>ayook jalan berduaa 😊</p>
       <div class="comment-form">
         <textarea id="comment" rows="4" placeholder="Ketik Balasan" required></textarea>
-        <button onclick="submitComment()">Submit</button>
+        <button onclick="submitComment()">Ok</button>
       </div>
     </div>
 
     <!-- New Thank You popup -->
-    <div class="popup" id="thank-you-popup" style="background-color: white; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2)">
-      <p>Thank you for your response! 😊</p>
+    <div class="popup" id="thank-you-popup">
+      <p>Terima kasih! ❤️</p>
       <button onclick="closeThankYouPopup()">Close</button>
     </div>
 
@@ -109,7 +168,7 @@
 
       function checkPassword() {
         const password = document.getElementById("password").value;
-        const correctPassword = "yourpassword"; // Replace with the actual password
+        const correctPassword = "sheila cantik"; // Replace with the actual password
 
         if (password === correctPassword) {
           passwordPopup.style.display = "none"; // Hide password popup
@@ -158,10 +217,6 @@
 
       function closeThankYouPopup() {
         window.location.href = "blackscreen.html"; // Redirect to a new page
-      }
-
-      function closeCommentPopup() {
-        commentPopup.style.display = "none"; // Close comment form
       }
     </script>
   </body>
