@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Love You</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        overflow: hidden;
+        background-color: black;
+        font-family: Arial, sans-serif;
+      }
+
+      video {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 100vw;
+        height: auto;
+        z-index: -1;
+        display: none;
+      }
+
+      .popup {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        padding: 30px;
+        border-radius: 15px;
+        text-align: center;
+        z-index: 2;
+        background: linear-gradient(145deg, #6a4c9c, #3b2a6b);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        color: white;
+        display: none;
+      }
+
+      .popup button {
+        background-color: #7a53e7;
+        color: white;
+        margin: 10px;
+        padding: 12px 25px;
+        font-size: 18px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+
+      .popup button:hover {
+        background-color: #6c4bb2;
+      }
+
+      .comment-form textarea {
+        width: 80%;
+        padding: 12px;
+        margin: 15px 0;
+        border-radius: 8px;
+        border: 2px solid #5a3382;
+        background-color: #2e1a47;
+        color: white;
+        font-size: 16px;
+      }
+
+      .comment-form textarea:focus {
+        outline: none;
+        border-color: #7a53e7;
+      }
+
+      .password-form input {
+        padding: 12px;
+        font-size: 16px;
+        border-radius: 8px;
+        border: 2px solid #5a3382;
+        background-color: #2e1a47;
+        color: white;
+      }
+
+      .password-form input:focus {
+        outline: none;
+        border-color: #7a53e7;
+      }
+
+      .password-form button {
+        background-color: #7a53e7;
+        color: white;
+        margin-top: 10px;
+        padding: 12px 25px;
+        font-size: 16px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+
+      .password-form button:hover {
+        background-color: #6c4bb2;
+      }
+
+      /* For Thank You Popup */
+      #thank-you-popup {
+        background-color: #2e1a47;
+        color: white;
+      }
+
+      #thank-you-popup button {
+        background-color: #7a53e7;
+        color: white;
+      }
+
+      #thank-you-popup button:hover {
+        background-color: #6c4bb2;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Password popup -->
+    <div class="popup" id="password-popup">
+      <p>Masukkan Password</p>
+      <div class="password-form">
+        <input type="text" id="password" placeholder="Enter password" autocomplete="off" />
+        <button onclick="checkPassword()">Ok</button>
+      </div>
+    </div>
+
+    <video id="bg-video">
+      <source src="vid/willyoubeforeverwithme.mp4" type="video/mp4" />
+      Your browser does not support the video tag.
+    </video>
+
+    <div class="popup" id="popup">
+      <button onclick="handleYes()">Yes</button>
+      <button onclick="handleNo()">No</button>
+    </div>
+
+    <!-- New popup for comment form -->
+    <div class="popup" id="comment-popup">
+      <p>ayook jalan berduaa 😊</p>
+      <div class="comment-form">
+        <textarea id="comment" rows="4" placeholder="Ketik Balasan" required></textarea>
+        <button onclick="submitComment()">Ok</button>
+      </div>
+    </div>
+
+    <!-- New Thank You popup -->
+    <div class="popup" id="thank-you-popup">
+      <p>Terima kasih! ❤️</p>
+      <button onclick="closeThankYouPopup()">Close</button>
+    </div>
+
+    <script>
+      const video = document.getElementById("bg-video");
+      const popup = document.getElementById("popup");
+      const commentPopup = document.getElementById("comment-popup");
+      const thankYouPopup = document.getElementById("thank-you-popup");
+      const passwordPopup = document.getElementById("password-popup");
+
+      // Show password popup initially
+      passwordPopup.style.display = "block";
+
+      function checkPassword() {
+        const password = document.getElementById("password").value;
+        const correctPassword = "sheila cantik"; // Replace with the actual password
+
+        if (password === correctPassword) {
+          passwordPopup.style.display = "none"; // Hide password popup
+          video.style.display = "block"; // Show video
+          video.play(); // Start playing video
+        } else {
+          alert("Incorrect password. Please try again.");
+        }
+      }
+
+      video.addEventListener("timeupdate", () => {
+        if (video.currentTime >= 29) {
+          popup.style.display = "block"; // Show popup at 3 seconds
+        }
+      });
+
+      function handleYes() {
+        popup.style.display = "none";
+        commentPopup.style.display = "block"; // Show comment form
+      }
+
+      function handleNo() {
+        video.pause();
+        alert("Error. Try Again!");
+        video.play();
+      }
+
+      function submitComment() {
+        const comment = document.getElementById("comment").value;
+        if (comment) {
+          const formData = new FormData();
+          formData.append("entry.997117828", comment); // Replace with the actual entry ID from Google Form
+
+          // Submit the form data to Google Forms
+          fetch("https://docs.google.com/forms/d/e/1FAIpQLSfBeYEgD9FcHf0G1aoJ80OogItQAwwUevSyvyNiia_GiCa8fg/formResponse", {
+            method: "POST",
+            body: formData,
+          });
+          // After successful submission, show the Thank You popup
+          commentPopup.style.display = "none"; // Hide comment form
+          thankYouPopup.style.display = "block"; // Show the "Thank You" popup
+        } else {
+          alert("Please write a comment.");
+        }
+      }
+
+      function closeThankYouPopup() {
+        window.location.href = "blackscreen.html"; // Redirect to a new page
+      }
+    </script>
+  </body>
+</html>
