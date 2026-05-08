@@ -2,7 +2,10 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta 
+    name="viewport" 
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+  />
   <title>Fullscreen Video</title>
 
   <style>
@@ -18,6 +21,12 @@
       overflow: hidden;
       background: white;
       font-family: sans-serif;
+      touch-action: manipulation;
+    }
+
+    body{
+      position: fixed;
+      inset: 0;
     }
 
     /* Tombol play */
@@ -36,11 +45,10 @@
       display: block;
     }
 
-    /* Overlay hitam */
+    /* Overlay */
     #overlay{
       position: fixed;
-      top: 0;
-      left: 0;
+      inset: 0;
       width: 100vw;
       height: 100vh;
       background: white;
@@ -63,22 +71,34 @@
       height: auto;
     }
 
-    /* Container video */
+    /* Video container */
     #videoContainer{
+      position: fixed;
+      inset: 0;
+
       width: 100vw;
       height: 100vh;
-      background: white;
+
+      background: black;
       display: none;
 
       justify-content: center;
       align-items: center;
       overflow: hidden;
+
+      z-index: 5;
     }
 
     video{
       width: 100vw;
       height: auto;
+
+      max-width: 100vw;
       max-height: 100vh;
+
+      object-fit: contain;
+
+      background: black;
     }
 
     .hide{
@@ -93,17 +113,24 @@
     <img src="button.gif" alt="Play Button">
   </div>
 
-  <!-- Overlay hitam -->
+  <!-- Overlay -->
   <div id="overlay"></div>
 
-  <!-- Loading GIF -->
+  <!-- Loading -->
   <div id="loading">
     <img src="loading.gif" alt="Loading">
   </div>
 
   <!-- Video -->
   <div id="videoContainer">
-    <video id="myVideo" playsinline preload="auto">
+    <video 
+      id="myVideo"
+      playsinline
+      webkit-playsinline
+      preload="auto"
+      controlslist="nodownload noplaybackrate"
+      disablepictureinpicture
+    >
       <source src="video.mp4" type="video/mp4">
       Browser tidak mendukung video.
     </video>
@@ -116,40 +143,59 @@
     const playButton = document.getElementById("playButton");
     const loading = document.getElementById("loading");
 
-    // Klik tombol play
+    async function enterFullscreen() {
+      try {
+
+        // Android / modern browser
+        if (document.documentElement.requestFullscreen) {
+          await document.documentElement.requestFullscreen();
+        }
+
+        // Safari iPhone
+        else if (video.webkitEnterFullscreen) {
+          video.webkitEnterFullscreen();
+        }
+
+      } catch (err) {
+        console.log("Fullscreen gagal:", err);
+      }
+    }
+
+    // Klik tombol
     playButton.addEventListener("click", async () => {
 
       // sembunyikan tombol
       playButton.classList.add("hide");
 
-      // tampilkan overlay hitam
+      // tampilkan overlay
       overlay.style.display = "block";
 
-      // tampilkan loading gif
+      // tampilkan loading
       loading.style.display = "block";
 
-      // saat video siap diputar
+      // load video
+      video.load();
+
+      // saat video siap
       video.addEventListener("canplaythrough", async function startVideo(){
 
-        // sembunyikan loading
-        loading.classList.add("hide");
-
-        // tampilkan video
+        // tampilkan container video
         container.style.display = "flex";
 
-        // fullscreen
-        if (document.documentElement.requestFullscreen) {
-          document.documentElement.requestFullscreen();
-        }
+        // fullscreen mobile
+        await enterFullscreen();
 
         // putar video
         try {
           await video.play();
         } catch (e) {
-          console.log("Gagal memutar video:", e);
+          console.log("Video gagal diputar:", e);
         }
 
-        // sembunyikan overlay
+        // sembunyikan loading
+        loading.classList.add("hide");
+
+        // hilangkan overlay
         setTimeout(() => {
           overlay.classList.add("hide");
         }, 300);
@@ -157,16 +203,22 @@
         // hapus listener
         video.removeEventListener("canplaythrough", startVideo);
 
-      });
+      }, { once: true });
 
-      // mulai load video
-      video.load();
     });
 
-    // Saat video selesai
+    // selesai video
     video.addEventListener("ended", () => {
+
       container.classList.add("hide");
+
       document.body.style.background = "white";
+
+      // keluar fullscreen
+      if (document.fullscreenElement) {
+        document.exitFullscreen();
+      }
+
     });
   </script>
 
