@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Fullscreen Video</title>
+
+  <style>
+    *{
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body{
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: white;
+      font-family: sans-serif;
+    }
+
+    /* Tombol play */
+    #playButton{
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 30;
+      cursor: pointer;
+    }
+
+    #playButton img{
+      width: 180px;
+      height: auto;
+      display: block;
+    }
+
+    /* Overlay hitam */
+    #overlay{
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: white;
+      z-index: 10;
+      display: none;
+    }
+
+    /* Loading GIF */
+    #loading{
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 20;
+      display: none;
+    }
+
+    #loading img{
+      width: 120px;
+      height: auto;
+    }
+
+    /* Container video */
+    #videoContainer{
+      width: 100vw;
+      height: 100vh;
+      background: white;
+      display: none;
+
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    video{
+      width: 100vw;
+      height: auto;
+      max-height: 100vh;
+    }
+
+    .hide{
+      display: none !important;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Tombol -->
+  <div id="playButton">
+    <img src="button.gif" alt="Play Button">
+  </div>
+
+  <!-- Overlay hitam -->
+  <div id="overlay"></div>
+
+  <!-- Loading GIF -->
+  <div id="loading">
+    <img src="loading.gif" alt="Loading">
+  </div>
+
+  <!-- Video -->
+  <div id="videoContainer">
+    <video id="myVideo" playsinline preload="auto">
+      <source src="video.mp4" type="video/mp4">
+      Browser tidak mendukung video.
+    </video>
+  </div>
+
+  <script>
+    const video = document.getElementById("myVideo");
+    const overlay = document.getElementById("overlay");
+    const container = document.getElementById("videoContainer");
+    const playButton = document.getElementById("playButton");
+    const loading = document.getElementById("loading");
+
+    // Klik tombol play
+    playButton.addEventListener("click", async () => {
+
+      // sembunyikan tombol
+      playButton.classList.add("hide");
+
+      // tampilkan overlay hitam
+      overlay.style.display = "block";
+
+      // tampilkan loading gif
+      loading.style.display = "block";
+
+      // saat video siap diputar
+      video.addEventListener("canplaythrough", async function startVideo(){
+
+        // sembunyikan loading
+        loading.classList.add("hide");
+
+        // tampilkan video
+        container.style.display = "flex";
+
+        // fullscreen
+        if (document.documentElement.requestFullscreen) {
+          document.documentElement.requestFullscreen();
+        }
+
+        // putar video
+        try {
+          await video.play();
+        } catch (e) {
+          console.log("Gagal memutar video:", e);
+        }
+
+        // sembunyikan overlay
+        setTimeout(() => {
+          overlay.classList.add("hide");
+        }, 300);
+
+        // hapus listener
+        video.removeEventListener("canplaythrough", startVideo);
+
+      });
+
+      // mulai load video
+      video.load();
+    });
+
+    // Saat video selesai
+    video.addEventListener("ended", () => {
+      container.classList.add("hide");
+      document.body.style.background = "white";
+    });
+  </script>
+
+</body>
+</html>
