@@ -137,11 +137,6 @@
         // tampilkan video
         container.style.display = "flex";
 
-        // fullscreen
-        if (document.documentElement.requestFullscreen) {
-          document.documentElement.requestFullscreen();
-        }
-
         // putar video
         try {
           await video.play();
