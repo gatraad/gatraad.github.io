@@ -1,0 +1,9 @@
+{
+  "id": "contoh-id-transaksi",
+  "packageName": "id.dana",
+  "title": "Pembayaran Masuk",
+  "text": "Rp30.000 diterima DANA Bisnis.",
+  "amount": 30000,
+  "timestamp": 1791648000000,
+  "status": "pending"
+}
